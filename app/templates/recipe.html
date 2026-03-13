@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.title }} — My Recipes{% endblock %}
+
+{% block content %}
+  {# ── Hero ── #}
+  <section class="recipe-hero">
+    {% set display_image = recipe.custom_image_url or recipe.image_url %}
+    {% if display_image %}
+      <div class="recipe-hero-image">
+        <img src="{{ display_image }}" alt="{{ recipe.title }}" />
+      </div>
+    {% endif %}
+    <div class="recipe-hero-body">
+      <h1 class="recipe-title">{{ recipe.title }}</h1>
+      {% if recipe.url %}
+        <a href="{{ recipe.url }}" target="_blank" rel="noopener noreferrer" class="source-link">
+          View original recipe ↗
+        </a>
+      {% endif %}
+    </div>
+
+    {# ── Custom image form ── #}
+    <div class="image-edit">
+      <button type="button" class="btn-edit-image" onclick="toggleImageForm()">📷 Change image</button>
+      <form
+        id="image-form"
+        class="image-edit-form"
+        method="POST"
+        action="/recipes/{{ recipe.id }}/update-image"
+      >
+        <input
+          type="url"
+          name="image_url"
+          class="url-input image-url-input"
+          placeholder="Paste an image URL…"
+          value="{{ recipe.custom_image_url or '' }}"
+        />
+        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        {% if recipe.custom_image_url %}
+          <button type="button" class="btn btn-muted btn-sm" onclick="removeImage()">Remove</button>
+        {% endif %}
+      </form>
+    </div>
+  </section>
+
+  {# ── Info row ── #}
+  {% if recipe.servings or recipe.prep_time or recipe.cook_time or recipe.total_time %}
+    <section class="recipe-info-row">
+      {% if recipe.servings %}
+        <div class="info-item">
+          <span class="info-label">Servings</span>
+          <span class="info-value">{{ recipe.servings }}</span>
+        </div>
+      {% endif %}
+      {% if recipe.prep_time %}
+        <div class="info-item">
+          <span class="info-label">Prep Time</span>
+          <span class="info-value">{{ recipe.prep_time }}</span>
+        </div>
+      {% endif %}
+      {% if recipe.cook_time %}
+        <div class="info-item">
+          <span class="info-label">Cook Time</span>
+          <span class="info-value">{{ recipe.cook_time }}</span>
+        </div>
+      {% endif %}
+      {% if recipe.total_time %}
+        <div class="info-item">
+          <span class="info-label">Total Time</span>
+          <span class="info-value">{{ recipe.total_time }}</span>
+        </div>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  <div class="recipe-content">
+
+    {# ── Ingredients ── #}
+    {% if recipe.ingredients %}
+      <section class="recipe-section">
+        <h2 class="recipe-section-heading">Ingredients</h2>
+        <ul class="ingredients-list">
+          {% for item in recipe.ingredients %}
+            <li>{{ item.text }}</li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+    {# ── Spices ── #}
+    {% if recipe.spices %}
+      <section class="recipe-section">
+        <h2 class="recipe-section-heading">Spices</h2>
+        <div class="tag-group">
+          {% for spice in recipe.spices %}
+            <span class="tag tag-spice">{{ spice.name }}</span>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── Tools Needed ── #}
+    {% if recipe.tools %}
+      <section class="recipe-section">
+        <h2 class="recipe-section-heading">Tools Needed</h2>
+        <div class="tag-group">
+          {% for tool in recipe.tools %}
+            <span class="tag tag-tool">{{ tool.name }}</span>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {# ── Directions ── #}
+    {% if recipe.directions %}
+      <section class="recipe-section">
+        <h2 class="recipe-section-heading">Directions</h2>
+        <ol class="directions-list">
+          {% for step in recipe.directions %}
+            <li>{{ step.text }}</li>
+          {% endfor %}
+        </ol>
+      </section>
+    {% endif %}
+
+  </div>
+
+  {# ── Delete ── #}
+  <section class="recipe-actions">
+    <form
+      method="POST"
+      action="/recipes/{{ recipe.id }}/delete"
+      onsubmit="return confirm('Delete this recipe? This cannot be undone.')"
+    >
+      <button type="submit" class="btn btn-danger">Delete Recipe</button>
+    </form>
+  </section>
+
+  <script>
+    function toggleImageForm() {
+      document.getElementById('image-form').classList.toggle('visible');
+    }
+
+    function removeImage() {
+      const form = document.getElementById('image-form');
+      form.querySelector('input[name="image_url"]').value = '';
+      form.submit();
+    }
+  </script>
+{% endblock %}
