@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Calendar — Family Portal{% endblock %}
+
+{% block content %}
+  {# ── Month navigation header ── #}
+  <div class="cal-header">
+    <a href="/calendar?year={{ prev_year }}&amp;month={{ prev_month }}" class="cal-nav-arrow" aria-label="Previous month">&#8592;</a>
+    <h1 class="cal-month-heading">📅 {{ month_name }} {{ year }}</h1>
+    <a href="/calendar?year={{ next_year }}&amp;month={{ next_month }}" class="cal-nav-arrow" aria-label="Next month">&#8594;</a>
+  </div>
+
+  {# ── Family member filter pills ── #}
+  <div class="cal-member-filter">
+    <a href="/calendar?year={{ year }}&amp;month={{ month }}"
+       class="cal-pill {% if not selected_member %}cal-pill-active{% endif %}">
+      All
+    </a>
+    {% for m in family_members %}
+      <a href="/calendar?year={{ year }}&amp;month={{ month }}&amp;member={{ m.name }}"
+         class="cal-pill {% if selected_member == m.name %}cal-pill-active{% endif %}"
+         style="--pill-color: {{ m.color }}; border-color: {{ m.color }}; {% if selected_member == m.name %}background-color: {{ m.color }}; color: #fff;{% else %}color: {{ m.color }};{% endif %}">
+        {{ m.name }}
+      </a>
+    {% endfor %}
+  </div>
+
+  {# ── Flash message ── #}
+  {% if message %}
+    <div class="alert {% if 'error' in message.lower() or 'fail' in message.lower() or 'could not' in message.lower() %}alert-error{% else %}alert-success{% endif %}">
+      {{ message }}
+    </div>
+  {% endif %}
+
+  {# ── Calendar grid ── #}
+  <div class="cal-grid-wrapper">
+    <div class="cal-grid">
+      {# Day-of-week header #}
+      <div class="cal-dow-header">Sun</div>
+      <div class="cal-dow-header">Mon</div>
+      <div class="cal-dow-header">Tue</div>
+      <div class="cal-dow-header">Wed</div>
+      <div class="cal-dow-header">Thu</div>
+      <div class="cal-dow-header">Fri</div>
+      <div class="cal-dow-header">Sat</div>
+
+      {# Day cells #}
+      {% for week in weeks %}
+        {% for day in week %}
+          {% if day.day == 0 %}
+            <div class="cal-day cal-day-empty"></div>
+          {% else %}
+            <a href="/calendar/day/{{ day.date.isoformat() }}"
+               class="cal-day{% if day.is_today %} cal-day-today{% endif %}">
+              <span class="cal-day-num">{{ day.day }}</span>
+              {% set visible_events = day.events[:3] %}
+              {% for event in visible_events %}
+                <span class="cal-event-pill" style="background-color: {{ event.primary_color }};" title="{{ event.title }}">
+                  {{ event.title | truncate(20, True, '…') }}
+                </span>
+              {% endfor %}
+              {% if day.events | length > 3 %}
+                <span class="cal-event-more">+{{ day.events | length  - 3 }} more</span>
+              {% endif %}
+            </a>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

@@ -113,6 +113,11 @@ a:hover { text-decoration: underline; }
 
 .site-logo:hover { text-decoration: none; opacity: 0.85; }
 
+.site-nav {
+  display: flex;
+  gap: 1.25rem;
+}
+
 .site-nav a {
   font-size: 0.9rem;
   font-weight: 500;
@@ -577,6 +582,48 @@ a:hover { text-decoration: underline; }
   color: var(--color-text);
 }
 
+/* ── Modified badge ── */
+.badge-modified {
+  display: inline-block;
+  background: #fff3e0;
+  color: #e65100;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-lg);
+  vertical-align: middle;
+  margin-left: 0.5rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ── Recipe edit section ── */
+.recipe-edit-section {
+  margin: 2rem 0;
+}
+
+.recipe-actions-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.recipe-edit-form {
+  margin-top: 1.25rem;
+  padding: 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
 /* ── Recipe actions (delete) ── */
 .recipe-actions {
   margin-top: 2.5rem;
@@ -584,6 +631,867 @@ a:hover { text-decoration: underline; }
   border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: flex-end;
+}
+
+/* ============================================================
+   Dashboard
+   ============================================================ */
+
+/* Hero */
+.dashboard-hero {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-hero h1 {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-hero-subtitle {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+/* Nav link cards */
+.dashboard-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.dashboard-link-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  min-width: 180px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+  color: var(--color-text);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.dashboard-link-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.dashboard-link-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.dashboard-link-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Dashboard section */
+.dashboard-section {
+  margin: 2rem 0;
+  padding: 1.5rem 1.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+/* Upcoming events list */
+.upcoming-events-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0;
+}
+
+.event-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.event-item:last-child { border-bottom: none; }
+
+.event-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--color-primary);
+}
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.event-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.event-meta {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================
+   Calendar — month view
+   ============================================================ */
+
+.cal-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.cal-nav-arrow {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), color var(--transition);
+}
+
+.cal-nav-arrow:hover {
+  background: var(--color-surface-alt);
+  color: var(--color-primary-dark);
+  text-decoration: none;
+}
+
+.cal-month-heading {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Member filter pills */
+.cal-member-filter {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.cal-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.9rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.82rem;
+  font-weight: 500;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.cal-pill:hover {
+  border-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.cal-pill-active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.cal-pill-active:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: #fff;
+}
+
+/* Calendar grid */
+.cal-grid-wrapper {
+  overflow-x: auto;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  min-width: 560px;
+}
+
+.cal-dow-header {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  padding: 0.5rem 0.25rem;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cal-day {
+  min-height: 100px;
+  padding: 0.4rem 0.5rem;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: background var(--transition);
+}
+
+.cal-day:hover {
+  background: var(--color-surface-alt);
+}
+
+.cal-day-empty {
+  background: var(--color-bg);
+}
+
+.cal-day-empty:hover {
+  background: var(--color-bg);
+}
+
+.cal-day-today {
+  background: rgba(181, 69, 27, 0.06);
+}
+
+.cal-day-today:hover {
+  background: rgba(181, 69, 27, 0.1);
+}
+
+.cal-day-num {
+  font-weight: 600;
+  font-size: 0.82rem;
+  display: inline-block;
+  margin-bottom: 0.3rem;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.cal-day-today .cal-day-num {
+  background: var(--color-primary);
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+}
+
+.cal-event-pill {
+  display: block;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 1px 4px;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cal-event-more {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: 1px;
+}
+
+/* ============================================================
+   Calendar — day view
+   ============================================================ */
+
+.cal-day-nav {
+  margin-bottom: 1rem;
+}
+
+.cal-day-heading {
+  font-family: var(--font-heading);
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+}
+
+.cal-events-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Event cards */
+.cal-event-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 1rem 1.25rem;
+}
+
+.cal-event-card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.cal-event-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.cal-event-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.cal-event-meta {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+  align-items: center;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.badge-allday {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.cal-event-time {
+  color: var(--color-text);
+}
+
+.cal-event-member {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.cal-member-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cal-event-description {
+  margin-top: 0.65rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+/* Utility */
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+/* Inline edit form */
+.cal-edit-form {
+  display: none;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.cal-edit-form.visible {
+  display: block;
+}
+
+/* Add event section */
+.cal-add-section {
+  margin-top: 2rem;
+}
+
+.cal-add-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 1.25rem 1.5rem;
+}
+
+/* ============================================================
+   Form elements (shared across add/edit forms)
+   ============================================================ */
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+
+.form-group-inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.form-input::placeholder { color: var(--color-text-light); }
+
+.form-input:focus {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(181, 69, 27, 0.12);
+}
+
+textarea.form-input {
+  resize: vertical;
+}
+
+select.form-input {
+  appearance: auto;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.required {
+  color: var(--color-error-text);
+}
+
+/* ── Checkbox group (multi-select family members) ── */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+  accent-color: var(--color-primary);
+}
+
+.checkbox-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Event location ── */
+.cal-event-location {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Auth pages ── */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.auth-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-card);
+}
+
+.auth-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  margin: 0 0 0.25rem;
+}
+
+.auth-subtitle {
+  margin: 0 0 1.5rem;
+  font-size: 0.92rem;
+}
+
+.auth-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+.auth-footer a {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+/* ── Family setup ── */
+.family-setup-section {
+  margin: 1.5rem 0;
+}
+
+.family-setup-divider {
+  text-align: center;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.family-setup-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.family-setup-divider span {
+  background: var(--color-surface);
+  padding: 0 1rem;
+  position: relative;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+}
+
+/* ── Family settings ── */
+.family-section {
+  margin: 2rem 0;
+}
+
+.invite-code-display {
+  margin: 0.75rem 0;
+}
+
+.invite-code {
+  display: inline-block;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  font-family: monospace;
+  letter-spacing: 0.1em;
+  user-select: all;
+}
+
+.family-members-list {
+  list-style: none;
+  padding: 0;
+}
+
+.family-member-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.family-member-item:last-child {
+  border-bottom: none;
+}
+
+.family-member-name {
+  font-weight: 500;
+}
+
+.badge-you {
+  display: inline-block;
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-lg);
+}
+
+.nav-logout {
+  opacity: 0.7;
+}
+
+.nav-logout:hover {
+  opacity: 1;
+}
+
+/* ============================================================
+   Task Lists
+   ============================================================ */
+
+/* ── Add task section ── */
+.add-task-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.75rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-card);
+}
+
+.add-task-form {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+/* ── Task lists grid ── */
+.task-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.task-list-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow var(--transition), transform var(--transition);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.task-list-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.task-list-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.task-list-type-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.task-list-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.task-list-card-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.task-progress-bar {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.task-progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* ── Task detail ── */
+.task-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.task-add-item-section {
+  margin-bottom: 1.5rem;
+}
+
+.task-add-item-form {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ── Task items list ── */
+.task-items-list {
+  list-style: none;
+  padding: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  transition: background var(--transition);
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-item:hover {
+  background: var(--color-surface-alt);
+}
+
+.task-item-done {
+  background: var(--color-surface-alt);
+}
+
+.task-item-done .task-item-text {
+  text-decoration: line-through;
+  color: var(--color-text-light);
+}
+
+.task-item-check-form {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.task-item-checkbox {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  color: var(--color-primary);
+  transition: transform var(--transition);
+}
+
+.task-item-checkbox:hover {
+  transform: scale(1.15);
+}
+
+.task-item-text {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.task-item-assignee {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  background: var(--color-surface-alt);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.task-item-delete-form {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.task-item-delete {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--color-text-light);
+  cursor: pointer;
+  padding: 0 0.25rem;
+  line-height: 1;
+  transition: color var(--transition);
+}
+
+.task-item-delete:hover {
+  color: var(--color-error-text);
 }
 
 /* ============================================================
@@ -608,5 +1516,35 @@ a:hover { text-decoration: underline; }
 
   .recipe-grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  /* Dashboard */
+  .dashboard-links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-link-card {
+    min-width: unset;
+  }
+
+  /* Calendar month view */
+  .cal-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cal-member-filter {
+    flex-wrap: wrap;
+  }
+
+  .cal-day {
+    min-height: 70px;
+  }
+
+  .cal-event-pill {
+    font-size: 0;
+    height: 6px;
+    padding: 0;
   }
 }

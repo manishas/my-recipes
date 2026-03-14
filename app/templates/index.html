@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}My Recipes — Home{% endblock %}
+{% block title %}Recipes — Family Portal{% endblock %}
 
 {% block content %}
   {# ── Flash message banner ── #}
@@ -38,7 +38,7 @@
 
   {# ── Search bar ── #}
   <section class="search-section">
-    <form class="search-form" method="GET" action="/">
+    <form class="search-form" method="GET" action="/recipes">
       <input
         type="text"
         name="search"
@@ -49,7 +49,7 @@
       />
       <button type="submit" class="btn btn-primary">Search</button>
       {% if search %}
-        <a href="/" class="btn btn-muted">Clear</a>
+        <a href="/recipes" class="btn btn-muted">Clear</a>
       {% endif %}
     </form>
   </section>
@@ -77,6 +77,9 @@
             </div>
             <div class="recipe-card-body">
               <h3 class="recipe-card-title">{{ recipe.title }}</h3>
+              {% if recipe.is_modified %}
+                <span class="badge badge-modified">Modified</span>
+              {% endif %}
             </div>
           </a>
         {% endfor %}
@@ -86,7 +89,7 @@
         <span class="empty-icon">📋</span>
         {% if search %}
           <p>No recipes match "{{ search }}".</p>
-          <p class="empty-sub"><a href="/">Clear search</a> or try different keywords.</p>
+          <p class="empty-sub"><a href="/recipes">Clear search</a> or try different keywords.</p>
         {% else %}
           <p>No recipes saved yet.</p>
           <p class="empty-sub">Paste a URL above to get started!</p>

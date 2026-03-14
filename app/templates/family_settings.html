@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Family Settings — Family Portal{% endblock %}
+{% block content %}
+  <h1 class="section-heading">👨‍👩‍👦‍👦 {{ family.name }}</h1>
+
+  {% if message %}
+    <div class="alert {% if 'error' in message.lower() %}alert-error{% else %}alert-success{% endif %}">
+      {{ message }}
+    </div>
+  {% endif %}
+
+  <section class="family-section">
+    <h2 class="section-heading">Invite Code</h2>
+    <p class="text-muted">Share this code with family members so they can join:</p>
+    <div class="invite-code-display">
+      <code class="invite-code">{{ family.invite_code }}</code>
+    </div>
+  </section>
+
+  <section class="family-section">
+    <h2 class="section-heading">Members</h2>
+    <ul class="family-members-list">
+      {% for member in members %}
+        <li class="family-member-item">
+          <span class="cal-member-dot" style="background-color: {{ member.color }};"></span>
+          <span class="family-member-name">{{ member.display_name }}</span>
+          <span class="text-muted">{{ member.email }}</span>
+          {% if member.id == current_user.id %}
+            <span class="badge badge-you">You</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="family-section">
+    <form method="POST" action="/family/leave" onsubmit="return confirm('Are you sure you want to leave this family?');">
+      <button type="submit" class="btn btn-danger">Leave Family</button>
+    </form>
+  </section>
+{% endblock %}

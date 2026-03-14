@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Task Lists — Family Portal{% endblock %}
+
+{% block content %}
+
+  <h1 class="section-heading">📋 Task Lists</h1>
+
+  {# ── Add new list form ── #}
+  <section class="add-task-section">
+    <h2 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 0.75rem;">Create a New List</h2>
+    <form action="/tasks/add" method="post" class="add-task-form">
+      <input type="text" name="title" placeholder="List name (e.g. Grocery run, Weekend chores...)" required class="form-input" style="flex:1; min-width:200px;" />
+      <select name="list_type" class="form-input" style="width:auto; min-width:140px;">
+        <option value="shopping">🛒 Shopping</option>
+        <option value="chores">🧹 Chores</option>
+        <option value="other">📝 Other</option>
+      </select>
+      <select name="assigned_to" class="form-input" style="width:auto; min-width:140px;">
+        <option value="">Everyone</option>
+        {% for member in family_members %}
+          <option value="{{ member.id }}">{{ member.first_name }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Create List</button>
+    </form>
+  </section>
+
+  {# ── Message ── #}
+  {% if message %}
+    <div class="alert alert-success">{{ message }}</div>
+  {% endif %}
+
+  {# ── Task lists grid ── #}
+  {% if task_lists %}
+    <div class="task-lists-grid">
+      {% for tl in task_lists %}
+        <a href="/tasks/{{ tl.id }}" class="task-list-card">
+          <div class="task-list-card-header">
+            <span class="task-list-type-icon">
+              {% if tl.list_type == "shopping" %}🛒{% elif tl.list_type == "chores" %}🧹{% else %}📝{% endif %}
+            </span>
+            <h3 class="task-list-card-title">{{ tl.title }}</h3>
+          </div>
+          <div class="task-list-card-meta">
+            <span class="task-list-count">
+              {{ tl.items | selectattr("is_completed") | list | length }} / {{ tl.items | length }} done
+            </span>
+            {% if tl.assignee %}
+              <span class="task-list-assignee">👤 {{ tl.assignee.first_name }}</span>
+            {% endif %}
+          </div>
+          {# Progress bar #}
+          {% set total = tl.items | length %}
+          {% set done = tl.items | selectattr("is_completed") | list | length %}
+          <div class="task-progress-bar">
+            <div class="task-progress-fill" style="width: {{ (done / total * 100) if total > 0 else 0 }}%"></div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">📋</span>
+      <p>No task lists yet.</p>
+      <p class="empty-sub">Create one above to get started!</p>
+    </div>
+  {% endif %}
+
+{% endblock %}

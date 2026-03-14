@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}{{ day_date.strftime('%B %d, %Y') }} — Calendar{% endblock %}
+
+{% block content %}
+  {# ── Back navigation ── #}
+  <div class="cal-day-nav">
+    <a href="/calendar?year={{ day_date.year }}&amp;month={{ day_date.month }}" class="btn btn-muted">
+      ← Back to {{ day_date.strftime('%B %Y') }}
+    </a>
+  </div>
+
+  {# ── Day heading ── #}
+  <h1 class="cal-day-heading">{{ day_date.strftime('%A, %B %d, %Y') }}</h1>
+
+  {# ── Flash message ── #}
+  {% if message %}
+    <div class="alert {% if 'error' in message.lower() or 'fail' in message.lower() or 'could not' in message.lower() %}alert-error{% else %}alert-success{% endif %}">
+      {{ message }}
+    </div>
+  {% endif %}
+
+  {# ── Events list ── #}
+  {% if events %}
+    <section class="cal-events-section">
+      {% for event in events %}
+        <div class="cal-event-card" style="border-left: 4px solid {{ event.primary_color }};">
+          <div class="cal-event-card-header">
+            <strong class="cal-event-title">{{ event.title }}</strong>
+            <div class="cal-event-actions">
+              <button
+                type="button"
+                class="btn btn-muted btn-sm"
+                onclick="toggleEditForm({{ event.id }})"
+                aria-expanded="false"
+                aria-controls="edit-form-{{ event.id }}">
+                Edit
+              </button>
+              <form method="POST" action="/calendar/{{ event.id }}/delete" style="display:inline;"
+                    onsubmit="return confirm('Delete this event?');">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="cal-event-meta">
+            {# Time / all-day badge #}
+            {% if event.all_day %}
+              <span class="badge badge-allday">All Day</span>
+            {% else %}
+              <span class="cal-event-time">
+                {% if event.start_time %}{{ event.start_time.strftime('%I:%M %p') }}{% endif %}
+                {% if event.start_time and event.end_time %} – {% endif %}
+                {% if event.end_time %}{{ event.end_time.strftime('%I:%M %p') }}{% endif %}
+              </span>
+            {% endif %}
+
+            {# Multiple member dots #}
+            {% for name, color in event.member_colors %}
+              <span class="cal-event-member">
+                <span class="cal-member-dot" style="background-color: {{ color }};"></span>
+                {{ name }}
+              </span>
+            {% endfor %}
+
+            {# Location #}
+            {% if event.location %}
+              <span class="cal-event-meta text-muted">📍 {{ event.location }}</span>
+            {% endif %}
+          </div>
+
+          {# Description #}
+          {% if event.description %}
+            <p class="cal-event-description text-muted">{{ event.description }}</p>
+          {% endif %}
+
+          {# Inline edit form (hidden by default) #}
+          <form id="edit-form-{{ event.id }}"
+                class="cal-edit-form"
+                method="POST"
+                action="/calendar/{{ event.id }}/edit"
+                style="display:none;">
+            <div class="form-group">
+              <label for="edit-title-{{ event.id }}">Title</label>
+              <input type="text" id="edit-title-{{ event.id }}" name="title"
+                     class="form-input" value="{{ event.title }}" required />
+            </div>
+            <div class="form-group">
+              <label>Family Members</label>
+              <div class="checkbox-group">
+                {% for m in family_members %}
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="family_member" value="{{ m.name }}"
+                           {% if m.name in event.member_list %}checked{% endif %} />
+                    <span class="checkbox-dot" style="background-color: {{ m.color }};"></span>
+                    {{ m.name }}
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="edit-location-{{ event.id }}">Location <span class="text-muted">(optional)</span></label>
+              <input type="text" id="edit-location-{{ event.id }}" name="location"
+                     class="form-input" value="{{ event.location or '' }}"
+                     placeholder="Optional location" />
+            </div>
+            <div class="form-group form-group-inline">
+              <label>
+                <input type="checkbox" name="all_day" id="edit-allday-{{ event.id }}"
+                       onchange="toggleTimeInputs('edit-start-{{ event.id }}','edit-end-{{ event.id }}',this)"
+                       {% if event.all_day %}checked{% endif %} />
+                All Day
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="edit-start-{{ event.id }}">Start Time</label>
+              <input type="time" id="edit-start-{{ event.id }}" name="start_time"
+                     class="form-input"
+                     value="{% if event.start_time %}{{ event.start_time.strftime('%H:%M') }}{% endif %}"
+                     {% if event.all_day %}disabled{% endif %} />
+            </div>
+            <div class="form-group">
+              <label for="edit-end-{{ event.id }}">End Time</label>
+              <input type="time" id="edit-end-{{ event.id }}" name="end_time"
+                     class="form-input"
+                     value="{% if event.end_time %}{{ event.end_time.strftime('%H:%M') }}{% endif %}"
+                     {% if event.all_day %}disabled{% endif %} />
+            </div>
+            <div class="form-group">
+              <label for="edit-desc-{{ event.id }}">Description</label>
+              <textarea id="edit-desc-{{ event.id }}" name="description"
+                        class="form-input" rows="2">{{ event.description or '' }}</textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-sm">Save</button>
+              <button type="button" class="btn btn-muted btn-sm"
+                      onclick="toggleEditForm({{ event.id }})">Cancel</button>
+            </div>
+          </form>
+        </div>
+      {% endfor %}
+    </section>
+  {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">🗭</span>
+      <p>No events on this day.</p>
+      <p class="empty-sub">Use the form below to add one!</p>
+    </div>
+  {% endif %}
+
+  {# ── Add event form ── #}
+  <section class="cal-add-section">
+    <div class="cal-add-card">
+      <h2 class="section-heading">Add Event</h2>
+      <form method="POST" action="/calendar/add" id="add-event-form">
+        <div class="form-group">
+          <label for="add-title">Title <span class="required">*</span></label>
+          <input type="text" id="add-title" name="title" class="form-input"
+                 placeholder="Event title" required autocomplete="off" />
+        </div>
+
+        {# Hidden date field pre-filled with current day #}
+        <input type="hidden" name="date" value="{{ day_date.isoformat() }}" />
+
+        <div class="form-group">
+          <label>Family Members</label>
+          <div class="checkbox-group">
+            {% for m in family_members %}
+              <label class="checkbox-label">
+                <input type="checkbox" name="family_member" value="{{ m.name }}" />
+                <span class="checkbox-dot" style="background-color: {{ m.color }};"></span>
+                {{ m.name }}
+              </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="add-location">Location <span class="text-muted">(optional)</span></label>
+          <input type="text" id="add-location" name="location" class="form-input"
+                 placeholder="Optional location" />
+        </div>
+
+        <div class="form-group form-group-inline">
+          <label>
+            <input type="checkbox" name="all_day" id="add-allday"
+                   onchange="toggleTimeInputs('add-start','add-end',this)" />
+            All Day
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="add-start">Start Time</label>
+          <input type="time" id="add-start" name="start_time" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label for="add-end">End Time</label>
+          <input type="time" id="add-end" name="end_time" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label for="add-desc">Description <span class="text-muted">(optional)</span></label>
+          <textarea id="add-desc" name="description" class="form-input" rows="3"
+                    placeholder="Optional notes…"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Add Event</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    function toggleEditForm(eventId) {
+      const form = document.getElementById('edit-form-' + eventId);
+      const btn = form.closest('.cal-event-card').querySelector('[aria-controls="edit-form-' + eventId + '"]');
+      if (form.style.display === 'none') {
+        form.style.display = 'block';
+        if (btn) btn.setAttribute('aria-expanded', 'true');
+      } else {
+        form.style.display = 'none';
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    function toggleTimeInputs(startId, endId, checkbox) {
+      const start = document.getElementById(startId);
+      const end = document.getElementById(endId);
+      if (start) start.disabled = checkbox.checked;
+      if (end) end.disabled = checkbox.checked;
+    }
+  </script>
+{% endblock %}

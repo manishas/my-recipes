@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}{{ recipe.title }} — My Recipes{% endblock %}
+{% block title %}{{ recipe.title }} — Recipes{% endblock %}
 
 {% block content %}
+  {# ── Flash message ── #}
+  {% if message %}
+    <div class="alert {% if 'error' in message.lower() or 'fail' in message.lower() or 'could not' in message.lower() %}alert-error{% else %}alert-success{% endif %}">
+      {{ message }}
+    </div>
+  {% endif %}
+
   {# ── Hero ── #}
   <section class="recipe-hero">
     {% set display_image = recipe.custom_image_url or recipe.image_url %}
@@ -12,7 +19,7 @@
       </div>
     {% endif %}
     <div class="recipe-hero-body">
-      <h1 class="recipe-title">{{ recipe.title }}</h1>
+      <h1 class="recipe-title">{{ recipe.title }} {% if recipe.is_modified %}<span class="badge badge-modified">Modified</span>{% endif %}</h1>
       {% if recipe.url %}
         <a href="{{ recipe.url }}" target="_blank" rel="noopener noreferrer" class="source-link">
           View original recipe ↗
@@ -126,14 +133,77 @@
 
   </div>
 
-  {# ── Delete ── #}
-  <section class="recipe-actions">
-    <form
-      method="POST"
-      action="/recipes/{{ recipe.id }}/delete"
-      onsubmit="return confirm('Delete this recipe? This cannot be undone.')"
-    >
-      <button type="submit" class="btn btn-danger">Delete Recipe</button>
+  {# ── Edit & Delete actions ── #}
+  <section class="recipe-edit-section">
+    <div class="recipe-actions-row">
+      <button type="button" class="btn btn-primary" onclick="toggleEditForm()">✏️ Edit Recipe</button>
+      <form
+        method="POST"
+        action="/recipes/{{ recipe.id }}/delete"
+        onsubmit="return confirm('Delete this recipe? This cannot be undone.')"
+      >
+        <button type="submit" class="btn btn-danger">Delete Recipe</button>
+      </form>
+    </div>
+
+    <form id="recipe-edit-form" class="recipe-edit-form" style="display:none" method="POST" action="/recipes/{{ recipe.id }}/edit">
+
+      <div class="form-group">
+        <label for="edit-title">Title</label>
+        <input type="text" id="edit-title" name="title" class="form-input" value="{{ recipe.title }}" />
+      </div>
+
+      <div class="form-group">
+        <label for="edit-description">Description</label>
+        <textarea id="edit-description" name="description" class="form-input">{{ recipe.description or '' }}</textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="edit-servings">Servings</label>
+          <input type="text" id="edit-servings" name="servings" class="form-input" value="{{ recipe.servings or '' }}" />
+        </div>
+        <div class="form-group">
+          <label for="edit-prep-time">Prep Time</label>
+          <input type="text" id="edit-prep-time" name="prep_time" class="form-input" value="{{ recipe.prep_time or '' }}" />
+        </div>
+        <div class="form-group">
+          <label for="edit-cook-time">Cook Time</label>
+          <input type="text" id="edit-cook-time" name="cook_time" class="form-input" value="{{ recipe.cook_time or '' }}" />
+        </div>
+        <div class="form-group">
+          <label for="edit-total-time">Total Time</label>
+          <input type="text" id="edit-total-time" name="total_time" class="form-input" value="{{ recipe.total_time or '' }}" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-ingredients">Ingredients <span class="text-muted"><small>one per line</small></span></label>
+        <textarea id="edit-ingredients" name="ingredients" class="form-input" rows="10">{% for i in recipe.ingredients %}{{ i.text }}{% if not loop.last %}
+{% endif %}{% endfor %}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-directions">Directions <span class="text-muted"><small>one per line</small></span></label>
+        <textarea id="edit-directions" name="directions" class="form-input" rows="10">{% for d in recipe.directions %}{{ d.text }}{% if not loop.last %}
+{% endif %}{% endfor %}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="edit-tools">Tools <span class="text-muted"><small>comma-separated</small></span></label>
+        <input type="text" id="edit-tools" name="tools" class="form-input" value="{{ recipe.tools | map(attribute='name') | join(', ') }}" />
+      </div>
+
+      <div class="form-group">
+        <label for="edit-spices">Spices <span class="text-muted"><small>comma-separated</small></span></label>
+        <input type="text" id="edit-spices" name="spices" class="form-input" value="{{ recipe.spices | map(attribute='name') | join(', ') }}" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-muted" onclick="document.getElementById('recipe-edit-form').style.display='none'">Cancel</button>
+      </div>
+
     </form>
   </section>
 
@@ -146,6 +216,11 @@
       const form = document.getElementById('image-form');
       form.querySelector('input[name="image_url"]').value = '';
       form.submit();
+    }
+
+    function toggleEditForm() {
+      const form = document.getElementById('recipe-edit-form');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
     }
   </script>
 {% endblock %}

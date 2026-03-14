@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Set Up Family — Family Portal{% endblock %}
+{% block content %}
+  <div class="auth-page">
+    <div class="auth-card" style="max-width: 500px;">
+      <h1 class="auth-title">👨‍👩‍👦‍👦 Set Up Your Family</h1>
+      <p class="auth-subtitle text-muted">Create a new family or join an existing one</p>
+
+      {% if message %}
+        <div class="alert {% if 'error' in message.lower() or 'invalid' in message.lower() %}alert-error{% else %}alert-success{% endif %}">
+          {{ message }}
+        </div>
+      {% endif %}
+
+      <div class="family-setup-section">
+        <h2 class="section-heading">Create a Family</h2>
+        <form method="POST" action="/family/create">
+          <div class="form-group">
+            <label for="family-name">Family Name <span class="required">*</span></label>
+            <input type="text" id="family-name" name="name" class="form-input" placeholder="e.g. The Smiths" required />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Family</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="family-setup-divider">
+        <span>or</span>
+      </div>
+
+      <div class="family-setup-section">
+        <h2 class="section-heading">Join a Family</h2>
+        <form method="POST" action="/family/join">
+          <div class="form-group">
+            <label for="invite-code">Invite Code <span class="required">*</span></label>
+            <input type="text" id="invite-code" name="invite_code" class="form-input" placeholder="Enter invite code" required />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Join Family</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

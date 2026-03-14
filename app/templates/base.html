@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}My Recipes{% endblock %}</title>
+  <title>{% block title %}Family Portal{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -12,9 +12,19 @@
 <body>
   <header class="site-header">
     <div class="container">
-      <a href="/" class="site-logo">🍴 My Recipes</a>
+      <a href="/" class="site-logo">🏠 Family Portal</a>
       <nav class="site-nav">
-        <a href="/">Home</a>
+        {% if request.session.get("user_id") %}
+          <a href="/">Home</a>
+          <a href="/recipes">Recipes</a>
+          <a href="/calendar">Calendar</a>
+          <a href="/tasks">Tasks</a>
+          <a href="/family">Family</a>
+          <a href="/logout" class="nav-logout">Logout</a>
+        {% else %}
+          <a href="/login">Login</a>
+          <a href="/register">Register</a>
+        {% endif %}
       </nav>
     </div>
   </header>
@@ -27,7 +37,7 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p>My Recipes &mdash; Save the ones worth keeping.</p>
+      <p>Family Portal &mdash; Keeping our family organized.</p>
     </div>
   </footer>
 </body>

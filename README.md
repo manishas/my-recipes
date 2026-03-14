@@ -1,6 +1,6 @@
-# 🍽️ My Recipes
+# 🏠 Family Portal
 
-A web app that saves recipes from across the internet. Paste a URL and the app scrapes the recipe, extracting ingredients, directions, tools needed, and spices — all stored neatly for later.
+A multi-tenant family hub — recipes, calendars, and more. Each family gets their own private space with shared recipes and events.
 
 ## Quick Start
 
@@ -18,24 +18,44 @@ uvicorn app.main:app --reload
 
 Then open [http://localhost:8000](http://localhost:8000) in your browser.
 
-## How It Works
+## Getting Started
 
-1. **Paste a recipe URL** on the home page
-2. The app fetches the page and extracts structured recipe data
-3. Recipes are saved to a local SQLite database (`recipes.db`)
-4. Browse your saved recipes, view details, or delete ones you no longer want
+1. **Register** — Create your account with name, email, username, and password
+2. **Create a Family** — Give your family a name and get an invite code
+3. **Share the invite code** — Other family members register and join using the code
+4. **Start using the portal!** — Add recipes, calendar events, and more
+
+## Features
+
+### 🔐 Authentication & Multi-Tenancy
+- User accounts with secure bcrypt password hashing
+- Create a family and invite members via shareable invite codes
+- All content is scoped to your family — other families can't see your data
+- Each family member gets a unique color for calendar events
+
+### 🍽️ Recipes
+- Paste a recipe URL and the app scrapes it automatically
+- Extracts ingredients, directions, tools, and spices
+- Search recipes by keyword across all fields
+- Edit recipes and track modifications (Modified badge)
+- Set a custom image for any recipe
+
+### 📅 Family Calendar
+- Monthly calendar view with color-coded events per family member
+- Click any day to see details and add events
+- Filter by family member
+- Assign multiple family members to an event
+- Add locations to events
+- Edit and delete events
+
+### 🏠 Dashboard
+- Quick links to all features
+- Upcoming events at a glance
+- Recent recipes
 
 ## Tech Stack
 
 - **Backend:** Python, FastAPI, SQLAlchemy, SQLite
+- **Auth:** passlib + bcrypt, Starlette SessionMiddleware
 - **Frontend:** Jinja2 templates, vanilla CSS/JS
 - **Scraping:** recipe-scrapers library + BeautifulSoup JSON-LD fallback
-
-## What Gets Extracted
-
-- Title, description, and image
-- Servings, prep time, cook time, total time
-- Full ingredient list
-- Step-by-step directions
-- Cooking tools detected (oven, skillet, etc.)
-- Spices and herbs detected (cumin, paprika, etc.)
